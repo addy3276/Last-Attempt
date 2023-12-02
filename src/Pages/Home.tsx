@@ -61,7 +61,14 @@ export function Home(props: PaperProps) {
      
       console.log('Authentication successful');
     } catch (error) {
-      //  alert(error.message);
+      if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+        
+        alert('Invalid credentials. Please check your email and password.');
+      } else {
+       
+        alert(error.message);
+      }
+   
     }
   };
 
