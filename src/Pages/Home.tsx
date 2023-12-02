@@ -13,26 +13,24 @@ import {
   Anchor,
   Stack,
 } from '@mantine/core';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-// import { getAuth} from "firebase/auth";
-// import { app } from "../../config/firebase"
+import { auth } from "../../config/firebase"
+import { signInWithEmailAndPassword , createUserWithEmailAndPassword} from "firebase/auth";
+ import { useState } from "react";
 
 export function Home(props: PaperProps) {
-  // const auth = getAuth(app);
-  
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+
+  const [LoginSuccess, setLoginSuccess] = useState(false);
+
+
   const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
-    initialValues: {
-      // username:'',
-      // firstName:'',
-      // lastName:'',
+    initialValues: {   
       email: '',
-      // name: '',
       password: '',
-      // phone:'',
       terms: true,
     },
+
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
@@ -43,15 +41,27 @@ export function Home(props: PaperProps) {
   const handleAuthentication = async () => {
     try {
       if (type === 'login') {
-        await firebase.auth().signInWithEmailAndPassword(form.values.email, form.values.password);
+        await signInWithEmailAndPassword(auth,form.values.email, form.values.password);
+        setLoginSuccess(true);
+        form.setValues({
+          email: '',
+          password: '',
+           terms: true,
+        })
+
       } else {
-        await firebase.auth().createUserWithEmailAndPassword(form.values.email, form.values.password);
-      }
+        await createUserWithEmailAndPassword(auth,form.values.email, form.values.password);
+       setRegistrationSuccess(true); 
+        form.setValues({
+          email: '',
+          password: '',
+           terms: true,
+        })
+    }
      
       console.log('Authentication successful');
     } catch (error) {
-     
-      console.error('Authentication error:', error);
+      //  alert(error.message);
     }
   };
 
@@ -64,46 +74,21 @@ export function Home(props: PaperProps) {
       </Text>
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
-      {/* <form onSubmit={form.onSubmit(() => {})}> */}
-      {/* <form onSubmit={form.onSubmit(()=>{})}> */}
+   
       <form onSubmit={(e) => { e.preventDefault(); handleAuthentication(); }}>
         <Stack>
-          {/* {type === 'register' && (
-            <TextInput
-              label="Name"
-              placeholder="Your name"
-              value={form.values.name}
-              onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-              radius="md"
-            />
-            )} */}
-                {/* {type === 'register' && (
-            <TextInput
-              label="Username"
-              placeholder="Username"
-              value={form.values.username}
-              onChange={(event) => form.setFieldValue('username', event.currentTarget.value)}
-              radius="md"
-            />
-            )} */}
-             {/* {type === 'register' && (
-            <TextInput
-              label="First Name"
-              placeholder="First Name"
-              value={form.values.firstName}
-              onChange={(event) => form.setFieldValue('firstName', event.currentTarget.value)}
-              radius="md"
-            />
-            )} */}
-             {/* {type === 'register' && (
-            <TextInput
-              label="Last Name"
-              placeholder="Last Name"
-              value={form.values.lastName}
-              onChange={(event) => form.setFieldValue('lastName', event.currentTarget.value)}
-              radius="md"
-            />
-            )}   */}
+
+        {LoginSuccess && (
+            <Text size="lg" fw={500} >
+            Login Succesfull
+        </Text>
+           )}
+           {registrationSuccess && (
+            <Text size="lg" fw={500} >
+            Registration Succesfull
+        </Text>
+           )}
+   
           <TextInput
             required
             label="Email"
@@ -123,15 +108,7 @@ export function Home(props: PaperProps) {
             error={form.errors.password && 'Password should include at least 6 characters'}
             radius="md"
           />
-           {/* {type === 'register' && (
-            <TextInput
-              label="Phone No"
-              placeholder="Phone No"
-              value={form.values.phone}
-              onChange={(event) => form.setFieldValue('phone', event.currentTarget.value)}
-              radius="md"
-            />
-            )}   */}
+          
 
           {type === 'register' && (
             <Checkbox
@@ -153,6 +130,7 @@ export function Home(props: PaperProps) {
       
           </Button>
         </Group>
+     
       </form>
     </Paper>
     </div>
