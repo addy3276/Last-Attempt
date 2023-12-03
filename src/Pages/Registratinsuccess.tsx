@@ -2,7 +2,9 @@
 
 function Registratinsuccess() {
   return (
-    <div>Registratinsuccess</div>
+    <div>
+        <h1 style={{textAlign:"center",marginTop:"280px"}}>  Registration Success</h1>
+        </div>
   )
 }
 

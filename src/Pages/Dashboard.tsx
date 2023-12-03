@@ -2,7 +2,9 @@
 
 function Dashboard() {
   return (
-    <div>Login Succes</div>
+    <div >
+        <h1 style={{textAlign:"center",marginTop:"280px"}}>  Login Success</h1>
+       </div>
   )
 }
 

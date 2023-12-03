@@ -64,6 +64,7 @@ export function Home(props: PaperProps) {
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
    
       <form onSubmit={form.onSubmit(vals => {login()})}>
+      
         <Stack>
           <TextInput
             label="Email"
