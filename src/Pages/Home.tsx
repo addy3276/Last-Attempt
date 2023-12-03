@@ -10,12 +10,15 @@ import {
   Button,
   Divider,
   Stack,
+  Anchor,
+
 } from '@mantine/core';
 import { auth } from "../../config/firebase"
 import { signInWithEmailAndPassword } from "firebase/auth";
 
  import { useNavigate } from 'react-router-dom';
  import { useState } from 'react';
+ import { Link } from 'react-router-dom';
  
 
 export function Home(props: PaperProps) {
@@ -81,6 +84,9 @@ export function Home(props: PaperProps) {
         </Stack>
 
         <Group justify="end" mt="xl">
+        <Anchor component={Link} to={'/registration'} type="button" c="dimmed"  size="xs">
+            Don't have an account? Register
+          </Anchor> 
           <Button type="submit" radius="xl">
             {loading ? 'Loading...' :upperFirst(type)}
       

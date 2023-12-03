@@ -18,6 +18,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 
  import { useNavigate } from 'react-router-dom';
  import { useState } from 'react';
+ import { Link } from 'react-router-dom';
 
 
 export function Register(props: PaperProps) {
@@ -93,8 +94,8 @@ export function Register(props: PaperProps) {
         </Stack>
 
         <Group justify="end" mt="xl">
-           <Anchor component="button" type="button" c="dimmed"  size="xs">
-            Don't have an account? Register
+           <Anchor component={Link} to={"/"} type="button" c="dimmed"  size="xs">
+            Already Have an Account Login
           </Anchor> 
           <Button type="submit" radius="xl">
             {loading?'loading...': upperFirst(type)}
