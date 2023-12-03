@@ -9,51 +9,57 @@ import {
   PaperProps,
   Button,
   Divider,
+  Checkbox,
+  Anchor,
   Stack,
 } from '@mantine/core';
 import { auth } from "../../config/firebase"
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
  import { useNavigate } from 'react-router-dom';
  import { useState } from 'react';
- 
 
-export function Home(props: PaperProps) {
-  const [type] = useToggle(['login']);
+
+export function Register(props: PaperProps) {
+  const [type] = useToggle(['register']);
   const [loading, setLoading] = useState(false);
 
   const form = useForm({
     initialValues: {   
       email: '',
       password: '',
+      terms: true,
     },
+
+
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),    
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+        email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),    
+        password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
     },
   });
-  const navigate = useNavigate();
-  const login =  () =>{
-     setLoading(true)
-     signInWithEmailAndPassword(auth,form.values.email, form.values.password)
+  const navigate =useNavigate();
+
+  const Register = () =>{
+    setLoading(true)
+
+      createUserWithEmailAndPassword(auth,form.values.email, form.values.password)
      .then((auth) => {
-      if(auth)
-      form.reset();
-      navigate('/dashboard');
-    }) 
+        if(auth)
+        form.reset();
+        navigate('/registered');
+      }) 
     .catch((error:any) => {
-      if (error.message.includes("auth/invalid-email")) {
-        form.setFieldError("email", "Invalid email");
-      } else {
-        (error.message.includes("auth/wrong-password")) 
-          form.setFieldError("password", "Incorrect password");
-      }
-    })
-    .finally(()=>{
-      setLoading(false);
-    })
-  };
- 
+        if (error.message.includes("auth/email-already-in-use")) {
+          form.setFieldError("email", "Email Already Registered");
+        } else {
+            error.message.include("Authentication error:", error);
+        }
+      })
+      .finally(()=>{
+        setLoading(false)
+      })
+
+ };
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',backgroundColor:"	#D3D3D3"}}>
     <Paper  radius="md" p="xl" withBorder  {...props}>
@@ -63,7 +69,7 @@ export function Home(props: PaperProps) {
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
    
-      <form onSubmit={form.onSubmit(vals => {login()})}>
+      <form onSubmit={form.onSubmit(vals => {Register()})}>
         <Stack>
           <TextInput
             label="Email"
@@ -77,11 +83,19 @@ export function Home(props: PaperProps) {
             {...form.getInputProps('password')}
             radius="md"
           />
+            <Checkbox
+              label="I accept terms and conditions"
+              checked={form.values.terms}
+              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
+            />
         </Stack>
 
         <Group justify="end" mt="xl">
+           <Anchor component="button" type="button" c="dimmed"  size="xs">
+            Don't have an account? Register
+          </Anchor> 
           <Button type="submit" radius="xl">
-            {loading ? 'Loading...' :upperFirst(type)}
+            {loading?'loading...': upperFirst(type)}
       
           </Button>
         </Group>
@@ -91,4 +105,4 @@ export function Home(props: PaperProps) {
     </div>
   );
 }
-export default Home;
+export default Register;
