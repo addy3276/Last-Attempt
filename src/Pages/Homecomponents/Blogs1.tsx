@@ -1,11 +1,8 @@
-//import React from 'react'
 import { useParams } from 'react-router-dom';
 import blogData from '../blogs.dummy.json'
 function Blogs() {
 
     const { id } = useParams();
-    
-
     const selectBlog = blogData.find(blog => blog.id.toString() === id); 
   return (
    

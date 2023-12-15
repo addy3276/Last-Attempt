@@ -40,16 +40,19 @@ export function Register(props: PaperProps) {
   });
   const navigate =useNavigate();
 
-  const Register = () =>{
+  const Register = () =>{[]
     setLoading(true)
 
       createUserWithEmailAndPassword(auth,form.values.email, form.values.password)
      .then((auth) => {
         if(auth)
         form.reset();
-        navigate('/registered');
+        navigate('/');
       }) 
+
+      
     .catch((error:any) => {
+      debugger;
         if (error.message.includes("auth/email-already-in-use")) {
           form.setFieldError("email", "Email Already Registered");
         } else {
@@ -59,6 +62,7 @@ export function Register(props: PaperProps) {
       .finally(()=>{
         setLoading(false)
       })
+
 
  };
   return (
@@ -71,8 +75,6 @@ export function Register(props: PaperProps) {
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
    
       <form onSubmit={form.onSubmit(vals => {Register()})}>
-      {/* <form onSubmit={form.onSubmit(() => {Register})}> */}
-
         <Stack>
           <TextInput
             label="Email"
